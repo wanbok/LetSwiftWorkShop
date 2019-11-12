@@ -39,7 +39,8 @@ let indexesArray: [String] = (selectedIndexes as! [Int]).map { number in
 indexesArray.forEach { value in
     
     let filteredChamps = champsJson.filter { dict in
-        (dict["key"] as! String) == value
+        guard let dictValue = dict["key"] as? String else { return false }
+        return dictValue == value
     }
     
     guard
