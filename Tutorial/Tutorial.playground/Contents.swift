@@ -43,21 +43,21 @@ extension Champ {
     }
 }
 
+func _print(_ value: String) {
+    return print(value)
+}
+
 let champsFilePath = Bundle.main.path(forResource: "champs", ofType: "json")
 let selectedIndexesFilePath = Bundle.main.path(forResource: "selectedIndexes", ofType: "json")
 
 let champsData = FileManager.default.contents(atPath: champsFilePath!)
 let selectedIndexesData = FileManager.default.contents(atPath: selectedIndexesFilePath!)
 
-//let champs = try JSONSerialization.jsonObject(with: champsData!, options: [])
-var indices: Array<Int> = []
-if let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: []) as? Array<Int> {
-    indices = selectedIndexes
-}
+let indices = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: []) as? Array<Int>
+let champs: Array<Champ> = try JSONDecoder().decode(Array<Champ>.self, from: champsData!)
 
-let champs: Array<Champ> = try! JSONDecoder().decode(Array<Champ>.self, from: champsData!)
-let names = indices
-    .compactMap { index in champs.first { Int($0.key)! == index } }
+let names = indices?
+    .compactMap { index in champs.first { Int($0.key) == index } }
     .map { champ in champ.name }
 
-print(names)
+names?.forEach(_print)
