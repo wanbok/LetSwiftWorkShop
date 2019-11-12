@@ -31,19 +31,22 @@ let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData
 // TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
 var names: [String] = []
 
-let champsArray = champs as! [[String : Any]]
-
-let indexesArray = selectedIndexes as! [Int]
+let champsJson = champs as! [[String : Any]]
+let indexesArray: [String] = (selectedIndexes as! [Int]).map { number in
+    number.description
+}
 
 indexesArray.forEach { value in
-
     
-    let filteredChamp = champsArray.filter { json in
-        (json["key"] as! String) == String(value) }
-        .first!
-    let champName = filteredChamp["name"] as! String
+    let filteredChamps = champsJson.filter { dict in
+        (dict["key"] as! String) == value
+    }
+    
+    guard
+        let filteredChamp = filteredChamps.first,
+        let champName = filteredChamp["name"] as? String else { return }
     
     names.append(champName)
 }
 
-print("Names: \(names)")
+print("Result: \(names)")
