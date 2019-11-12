@@ -29,4 +29,21 @@ let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData
 
 // TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
 let names: [String] = []
-print(names)
+
+struct camp: Decodable {
+    let key: String
+    let name: String
+}
+
+if let objects = try? JSONDecoder().decode([camp].self, from: champsData!) {
+    let indexes = selectedIndexes as! [Int]
+    indexes.forEach { index in
+        objects.forEach { obj in
+            if Int(obj.key) == index {
+                print(obj.name)
+            }
+        }
+    }
+} else {
+    print("fail")
+}
