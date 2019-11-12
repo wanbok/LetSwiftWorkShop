@@ -1,32 +1,63 @@
 import Foundation
 
-/*
- [
-    {
-        "key": "266",
-        "name": "Aatrox",
-    ...
-    },
-    ...
- ]
- */
-let champsFilePath = Bundle.main.path(forResource: "champs", ofType: "json")
+struct Champ: Codable {
+    let name: String
+    let id: String
+    let key: String
+    let title: String
+    let tags: Array<String>
+//    let stats: Stats
+    let icon: String
+//    let sprite: Sprite
+    let description: String
+}
 
-/*
- [
-    1,
-    33,
-    ...
- ]
- */
+extension Champ {
+    struct Stats: Codable {
+        let hp: Int
+        let hpperlevel: Int
+        let mp: Int
+        let mpperlevel: Int
+        let movespeed: Int
+        let armor: Int
+        let armorperlevel: Float
+        let spellblock: Float
+        let spellblockperlevel: Float
+        let sttackrange: Int
+        let hpregen: Float
+        let hpregenperlevel: Float
+        let mpregen: Int
+        let mpregenperlevel: Int
+        let crit: Int
+        let critperlevel: Int
+        let attackdamage: Int
+        let attackdamageperlevel: Float
+        let attachspeedoffset: Float
+        let attachsppedperlevel: Int
+    }
+
+    struct Sprite: Codable {
+        let url: String
+        let x: Int
+        let y: Int
+    }
+}
+
+func _print(_ value: String) {
+    return print(value)
+}
+
+let champsFilePath = Bundle.main.path(forResource: "champs", ofType: "json")
 let selectedIndexesFilePath = Bundle.main.path(forResource: "selectedIndexes", ofType: "json")
 
 let champsData = FileManager.default.contents(atPath: champsFilePath!)
 let selectedIndexesData = FileManager.default.contents(atPath: selectedIndexesFilePath!)
 
-let champs = try JSONSerialization.jsonObject(with: champsData!, options: [])
-let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: [])
+let indices = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: []) as? Array<Int>
+let champs: Array<Champ> = try JSONDecoder().decode(Array<Champ>.self, from: champsData!)
 
-// TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
-let names: [String] = []
-print(names)
+let names = indices?
+    .compactMap { index in champs.first { Int($0.key) == index } }
+    .map { champ in champ.name }
+
+names?.forEach(_print)
