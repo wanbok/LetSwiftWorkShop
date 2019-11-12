@@ -34,8 +34,10 @@ var names: [String] = []
 let champsArray = champs as! [[String: Any]]
 let selectedIndexesArray = selectedIndexes as! [Int]
 selectedIndexesArray.forEach { index in
-  let filteredChamp = champsArray.filter { ($0["key"] as! String) == String(index) }.first!
-  let champName = filteredChamp["name"] as! String
+  let champName = champsArray
+    .filter { ($0["key"] as! String) == String(index) }
+    .map { $0["name"] as! String }
+    .first!
   names.append(champName)
 }
 
