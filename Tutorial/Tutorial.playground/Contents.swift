@@ -35,11 +35,11 @@ let champsArray = champs as! [[String : Any]]
 
 let indexesArray = selectedIndexes as! [Int]
 
-indexesArray.forEach { key in
+indexesArray.forEach { value in
 
     
     let filteredChamp = champsArray.filter { json in
-        (json["key"] as! String) == String(key) }
+        (json["key"] as! String) == String(value) }
         .first!
     let champName = filteredChamp["name"] as! String
     
