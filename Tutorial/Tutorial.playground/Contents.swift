@@ -30,8 +30,9 @@ let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData
 // TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
 
 let champsDict = champs?
-    .flatMap { [($0["key"] as? String) ?? "": ($0["name"] as? String) ?? ""] }
-    .reduce(into: [String: String](), { $0[$1.key] = $1.value })
+    .flatMap { [$0["key"] as? String: $0["name"] as? String] }
+    // 옵셔널 값을 그대로 딕셔너리에 키값으로 넣었다. 지금은 오류가 없으나 추가적인 사이드 이팩트가 어떤게 있을까?
+    .reduce(into: [:]) { $0[$1.key] = $1.value }
 
 let names = selectedIndexes?
     .compactMap { String($0) }
