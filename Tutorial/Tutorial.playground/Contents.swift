@@ -37,8 +37,8 @@ struct camp: Decodable {
 
 if let objects = try? JSONDecoder().decode([camp].self, from: champsData!) {
     let indexes = selectedIndexes as! [Int]
-    for index in indexes {
-        for obj in objects {
+    indexes.forEach { index in
+        objects.forEach { obj in
             if Int(obj.key) == index {
                 print(obj.name)
             }
