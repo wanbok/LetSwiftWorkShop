@@ -34,16 +34,16 @@ class Champion: Codable {
 let champs = try! JSONDecoder().decode([Champion].self, from: champsData!)
 let indexes = try! JSONDecoder().decode([Int].self, from: selectedIndexesData!)
 
-//let numberIndexes = indexes.map{ Int($0)! }
-
-var names: [String] = []
+// 1
+var result1: [String] = []
 
 indexes.forEach { index in
     champs.filter { champ in
         champ.key == String(index)
-    }.map { names.append($0.name!) }
+    }.map { result1.append($0.name!) }
 }
 
+/*
 // 다른방법
 indexes.forEach { index in
     let champName = champs.filter { champ in
@@ -52,15 +52,18 @@ indexes.forEach { index in
     .first!.name
     names.append(champName!)
 }
+*/
 
 // ["Tryndamere", "Udyr", "Ahri", "Vayne", "Pyke"]
-print("결과1: \(names)")
+print("결과1: \(result1)")
 
+// 2
 let result2 = indexes.compactMap { index in
     champs.first { champ in
         champ.key == String(index)
     }?.name
 }
-
+// ["Tryndamere", "Udyr", "Ahri", "Vayne", "Pyke"]
 print("결과2: \(result2)")
+
 
