@@ -33,7 +33,7 @@ let champsArray = champs as! [[String: Any]]
 let selectedIndexesArray = selectedIndexes as! [Int]
 
 let names = selectedIndexesArray
-  .reduce([String]()) { result, key in
+  .reduce([]) { result, key in
     let champName = champsArray
       .filter { ($0["key"] as! String) == String(key) }
       .map { $0["name"] as! String }
