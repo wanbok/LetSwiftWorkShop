@@ -2,21 +2,21 @@ import Foundation
 
 /*
  [
-    {
-        "key": "266",
-        "name": "Aatrox",
-    ...
-    },
-    ...
+ {
+ "key": "266",
+ "name": "Aatrox",
+ ...
+ },
+ ...
  ]
  */
 let champsFilePath = Bundle.main.path(forResource: "champs", ofType: "json")
 
 /*
  [
-    1,
-    33,
-    ...
+ 1,
+ 33,
+ ...
  ]
  */
 let selectedIndexesFilePath = Bundle.main.path(forResource: "selectedIndexes", ofType: "json")
@@ -33,12 +33,10 @@ let champsArray = champs as! [[String: Any]]
 let selectedIndexesArray = selectedIndexes as! [Int]
 
 let names = selectedIndexesArray
-  .reduce([]) { result, key in
-    let champName = champsArray
+  .flatMap { key in
+    champsArray
       .filter { ($0["key"] as! String) == String(key) }
       .map { $0["name"] as! String }
-      .first!
-    return result + [champName]
   }
 
 print(names)
