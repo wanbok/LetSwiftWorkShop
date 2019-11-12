@@ -39,8 +39,8 @@ let selectedIndexes = try decoder.decode([Int].self, from: selectedIndexesData!)
 
 let names: [String] = selectedIndexes.map {
     String(describing: $0)
-}.map { key in
+}.compactMap { key in
     champs.first { $0.key == key }?.name
-}.compactMap { $0 }
+}
 print(names)
 
