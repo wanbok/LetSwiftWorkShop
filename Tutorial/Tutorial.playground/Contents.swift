@@ -44,12 +44,23 @@ indexes.forEach { index in
     }.map { names.append($0.name!) }
 }
 
-// ["Tryndamere", "Udyr", "Ahri", "Vayne", "Pyke"]
-print(names)
+// 다른방법
+indexes.forEach { index in
+    let champName = champs.filter { champ in
+        champ.key == String(index)
+    }
+    .first!.name
+    names.append(champName!)
+}
 
-//names = indexes.map { index in
-//    champs.filter { champ in
-//        champ.key == index
-//    }
-//}
+// ["Tryndamere", "Udyr", "Ahri", "Vayne", "Pyke"]
+print("결과1: \(names)")
+
+let result2 = indexes.compactMap { index in
+    champs.first { champ in
+        champ.key == String(index)
+    }?.name
+}
+
+print("결과2: \(result2)")
 
