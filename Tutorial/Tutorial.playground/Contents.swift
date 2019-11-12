@@ -36,9 +36,13 @@ let champsArray = champs as! [[String : Any]]
 let indexesArray = selectedIndexes as! [Int]
 
 indexesArray.forEach { key in
-  let filteredChamp = champsArray.filter { ($0["key"] as! String) == String(key) }.first!
-  let champName = filteredChamp["name"] as! String
-  names.append(champName)
+    
+    let filteredChamp = champsArray.filter { json in
+        (json["key"] as! String) == String(key) }
+        .first!
+    let champName = filteredChamp["name"] as! String
+    
+    names.append(champName)
 }
 
-print(names)
+print("Names: \(names)")
