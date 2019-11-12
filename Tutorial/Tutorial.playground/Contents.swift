@@ -2,11 +2,11 @@ import Foundation
 
 /*
  [
- {
- "key": "266",
- "name": "Aatrox",
- ...
- },
+    {
+        "key": "266",
+        "name": "Aatrox",
+        ...
+    },
  ...
  ]
  */
@@ -14,9 +14,9 @@ let champsFilePath = Bundle.main.path(forResource: "champs", ofType: "json")
 
 /*
  [
- 1,
- 33,
- ...
+     1,
+     33,
+     ...
  ]
  */
 let selectedIndexesFilePath = Bundle.main.path(forResource: "selectedIndexes", ofType: "json")
@@ -31,17 +31,15 @@ let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData
 
 var names: [String] = []
 
-if let typedChamps = champs as? [[String: Any]] {
-    if let indexes = selectedIndexes as? [Int] {
-        
-        let extractedNames = typedChamps
-            .filter { champ in
-                return indexes.contains(Int(champ["key"] as! String)!)
-            }.map { champ in
-                return champ["name"] as! String
-            }
-        names.append(contentsOf: extractedNames)
-    }
+if let typedChamps = champs as? [[String: Any]], let indexes = selectedIndexes as? [Int] {
+    names.append(contentsOf:
+        typedChamps
+        .filter { champ in
+            return indexes.contains(Int(champ["key"] as! String)!)
+        }.map { champ in
+            return champ["name"] as! String
+        }
+    )
 }
 
 print(names)
