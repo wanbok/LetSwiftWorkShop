@@ -24,9 +24,46 @@ let selectedIndexesFilePath = Bundle.main.path(forResource: "selectedIndexes", o
 let champsData = FileManager.default.contents(atPath: champsFilePath!)
 let selectedIndexesData = FileManager.default.contents(atPath: selectedIndexesFilePath!)
 
-let champs = try JSONSerialization.jsonObject(with: champsData!, options: [])
-let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: [])
-
 // TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
-let names: [String] = []
-print(names)
+
+class Champion: Codable {
+    var key: String?
+    var name: String?
+}
+
+let champs = try! JSONDecoder().decode([Champion].self, from: champsData!)
+let indexes = try! JSONDecoder().decode([Int].self, from: selectedIndexesData!)
+
+// 1
+var result1: [String] = []
+
+indexes.forEach { index in
+    champs.filter { champ in
+        champ.key == String(index)
+    }.map { result1.append($0.name!) }
+}
+
+/*
+// 다른방법
+indexes.forEach { index in
+    let champName = champs.filter { champ in
+        champ.key == String(index)
+    }
+    .first!.name
+    names.append(champName!)
+}
+*/
+
+// ["Tryndamere", "Udyr", "Ahri", "Vayne", "Pyke"]
+print("결과1: \(result1)")
+
+// 2
+let result2 = indexes.compactMap { index in
+    champs.first { champ in
+        champ.key == String(index)
+    }?.name
+}
+// ["Tryndamere", "Udyr", "Ahri", "Vayne", "Pyke"]
+print("결과2: \(result2)")
+
+
