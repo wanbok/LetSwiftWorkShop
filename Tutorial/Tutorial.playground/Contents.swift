@@ -31,19 +31,15 @@ let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData
 var names: [String] = []
 
 
-guard let selectedIndexArray = selectedIndexes as? [Int],
-    let champDict = champs as? [[String: Any]] else {
-        fatalError()
-}
-
-
-selectedIndexArray.forEach { (index) in
-    champDict.forEach { (dict) in
-        if let value = dict["key"] as? String, value == String(index) {
-            names.append(dict["name"] as! String)
-        }
+if let selectedIndexes = selectedIndexes as? [Int],
+    let champs = champs as? [[String: Any]] {
+    
+    selectedIndexes.forEach { index in
+        let index = String(index)
+        let filter = champs.filter { $0["key"] as! String == index }
+        filter.forEach { names.append($0["name"] as! String)}
     }
 }
 
-print(names)
 
+print(names)
