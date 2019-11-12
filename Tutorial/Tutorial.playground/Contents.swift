@@ -27,22 +27,21 @@ let selectedIndexesData = FileManager.default.contents(atPath: selectedIndexesFi
 let champs = try JSONSerialization.jsonObject(with: champsData!, options: [])
 let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: [])
 
-var champDicts: [String: String]? = nil
+let champDicts = (champs as? [[String: Any]])?
+    .compactMap { $0 }
+    .map { ($0["key"] as! String, $0["name"] as! String) }
+    .reduce([:], { (res, current) -> [String: String] in
+        var res = res
+        res[current.0] = current.1
+        return res
+    })
 
-if let champArray = champs as? [[String: Any]] {
-    champDicts = champArray
-        .map { ($0["key"] as! String, $0["name"] as! String) }
-        .reduce([:], { (res, current) -> [String: String] in
-            var res = res
-            res[current.0] = current.1
-            return res
-        })
-}
-
-if let selectedIndexs = selectedIndexes as? [Int],
+if let selectedIndexes = selectedIndexes as? [Int?],
     let champDicts = champDicts {
     
-    let result = selectedIndexs.map { "\($0)" }
+    let result = selectedIndexes
+        .compactMap { $0 }
+        .map { "\($0)" }
         .map { champDicts[$0] }
         .compactMap { $0 }
     
@@ -52,3 +51,4 @@ if let selectedIndexs = selectedIndexes as? [Int],
 // TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
 let names: [String] = []
 print(names)
+
