@@ -10,6 +10,12 @@ import Foundation
     ...
  ]
  */
+struct Cham: Codable {
+    var key: String
+    var name: String
+    var tags: [String]
+}
+
 let champsFilePath = Bundle.main.path(forResource: "champs", ofType: "json")
 
 /*
@@ -27,6 +33,17 @@ let selectedIndexesData = FileManager.default.contents(atPath: selectedIndexesFi
 let champs = try JSONSerialization.jsonObject(with: champsData!, options: [])
 let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData!, options: [])
 
-// TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
-let names: [String] = []
-print(names)
+let decoder = JSONDecoder()
+if let champsData = champsData,
+    let champsResponse = try? decoder.decode([Cham].self, from: champsData),
+    let selectedIndexes = selectedIndexes as? [Int] {
+
+    let value = selectedIndexes.map({ index in
+        return champsResponse.first { (cham) -> Bool in
+            return cham.key == "\(index)"
+        }
+    })
+
+    let names: [String] = value.map({ $0?.name ?? "" })
+    print("names: ", names)
+}
