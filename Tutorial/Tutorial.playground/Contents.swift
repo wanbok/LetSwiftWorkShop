@@ -33,10 +33,7 @@ let champsArray = champs as! [[String: Any]]
 let selectedIndexesArray = selectedIndexes as! [Int]
 
 let names = selectedIndexesArray
-  .flatMap { key in
-    champsArray
-      .filter { ($0["key"] as! String) == String(key) }
-      .map { $0["name"] as! String }
-  }
+  .flatMap { key in champsArray.filter { ($0["key"] as! String) == String(key) } }
+  .map { $0["name"] as! String }
 
 print(names)
