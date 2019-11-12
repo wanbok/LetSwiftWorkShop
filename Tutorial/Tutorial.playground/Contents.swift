@@ -31,22 +31,22 @@ let selectedIndexes = try JSONSerialization.jsonObject(with: selectedIndexesData
 var names: [String] = []
 
 let champList = (champs as? [[String: Any]]) ?? []
-let selectedIndexList = (selectedIndexes as? [Int]) ?? []
+let selectedIndexList = ((selectedIndexes as? [Int]) ?? []).compactMap { String($0) }
 
-let temp = champList
-    .filter {
-        guard let index = Int(($0["key"] as? String) ?? "") else { return false }
-        return selectedIndexList.contains(Int(($0["key"] as? String) ?? "") ?? -1)
-}
+let temp: [[String: String]] = champList
+    .map {
+        guard let key = $0["key"] as? String, let name = $0["name"] as? String else { return nil }
+        return ["key": key, "name": name]
+    }
+    .compactMap { $0 }
 
 selectedIndexList.forEach { index in
-    let value = temp.filter {
-        guard let indexValue = Int(($0["key"] as? String) ?? "") else { return false }
-        return index == indexValue
-    }
-        .compactMap { $0["name"] as? String }
+    let value = temp
+        .filter { $0["key"] == index }
+        .compactMap { $0 }
         .first
-    names.append(value ?? "")
+    
+    names.append((value?["name"] as? String) ?? "")
 }
 
 print(names)
