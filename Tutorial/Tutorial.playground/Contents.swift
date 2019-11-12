@@ -34,3 +34,13 @@ let names: [String] = selectedIndexes.map{ index -> String in
 }
 
 print(names)
+
+//뭔가 순서가 이상하다
+let names2: [String] = champs.map{($0["key"] ,$0["name"])}
+    .compactMap { key, name -> String? in
+        guard let key = key as? String, let idx = Int(key),
+            selectedIndexes.contains(idx)  else { return nil }
+        return name as? String
+}
+
+print(names2)
