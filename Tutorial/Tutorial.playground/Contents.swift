@@ -26,32 +26,33 @@ let selectedIndexesData = FileManager.default.contents(atPath: selectedIndexesFi
 
 // TODO: selectedIndexes는 챔피언 목록(champs)의 key 번호 들이다. selectedIndexes에 명시된 순서대로 챔피언들의 이름(name)을 나열하라
 
+typealias ChampHashMap = [String: String]
+
+extension ChampHashMap {
+    func name<T: LosslessStringConvertible>(at key: T) -> String? {
+        return self[String(key)]
+    }
+}
+
 struct Champ: Decodable {
     let key: String
     let name: String
 }
 
-func merge(to dict: inout [String: String], from champ: Champ) {
-    dict[champ.key] = champ.name
-}
-
-func champName(at key: Int) -> String? {
-    return champDict["\(key)"]
+func merge(to hashMap: inout ChampHashMap, from champ: Champ) {
+    hashMap[champ.key] = champ.name
 }
 
 let champs = try JSONDecoder().decode([Champ].self, from: champsData ?? Data())
 let selectedIndexes = try JSONDecoder().decode([Int].self, from: selectedIndexesData ?? Data())
 
-let champDict = champs
+let champHashMap = champs
     .reduce(into: [:], merge)
-// 처음엔 Champ의 init에서 Dictionary로 정보를 받아 처리해 주도록 하여 개선해 보았으나 고계함수의 활용과 거리가 멀어보여 JSONDecoder를 활용하여 개선하도록 수정하였다.
 
 let names = selectedIndexes
-    .compactMap(champName)
-// Int를 String으로 변환해 주던 함수를 생략하였다.
-// Int를 String으로 변환해 줄 뗀 옵셔널 타입이 아니라 compactMap을 사용할 필요가 없다.
+    .compactMap(champHashMap.name)
 
 print(names)
 
-// JSONDecoder를 활용하여 처리하도록 변경하였다.
-// 그리고 익명함수를 안쓰고 적용할 수 있도록 변경해 보았다.
+// 함수 내부에서 함수 밖의 프로퍼티에 접근 하는 것은 위험하다고 생각되어 ChampHashMap 타입을 정의하고 ChampHashMap을 확장하여 이름을 리턴하도록 변경하였다.
+// hashMap이 dictionary보다 의도가 잘 드러날 거라 기대하여 변경하였다.
